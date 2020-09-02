@@ -1,0 +1,39 @@
+package com.hfad.workout.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.hfad.workout.Listener;
+import com.hfad.workout.R;
+import com.hfad.workout.fragments.WorkoutDetailFragment;
+
+public class MainActivity extends AppCompatActivity implements Listener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void itemClicked(long id) {
+        View fragmentContainer = findViewById(R.id.fragment_container);
+        if (fragmentContainer != null) {
+            WorkoutDetailFragment details = new WorkoutDetailFragment();
+            details.setWorkout(id);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, details);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(DetailActivity.EXTRA_WORKOUT_ID, id);
+            startActivity(intent);
+        }
+    }
+}
